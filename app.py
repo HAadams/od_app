@@ -1,8 +1,3 @@
-from object_detection.utils import visualization_utils as viz_utils
-from tensorflow import saved_model
-from tensorflow.keras.backend import clear_session
-from matplotlib.pyplot import rcParams
-from matplotlib.pyplot import figure
 from numpy import array
 from time import time
 from numpy import expand_dims
@@ -38,8 +33,6 @@ category_index = {
 
 
 ALLOWED_EXTENSIONS = ['jpeg', 'png', 'jpg']
-clear_session()
-detect_fn = saved_model.load('./faster_rcnn_trained_model/saved_model/')
 
 @app.route('/')
 def home():
@@ -82,6 +75,14 @@ def get_image_extension(image):
     return secure_filename(image.filename).rsplit('.')[-1]
 
 def detect_boxes(image):
+    from object_detection.utils import visualization_utils as viz_utils
+    from tensorflow import saved_model
+    from tensorflow.keras.backend import clear_session
+    from matplotlib.pyplot import rcParams
+    from matplotlib.pyplot import figure
+    clear_session()
+    detect_fn = saved_model.load('./faster_rcnn_trained_model/saved_model/')
+
     (im_width, im_height) = image.size
     image_np = array(image.getdata()).reshape((im_height, im_width, 3)).astype(np.uint8)
 
