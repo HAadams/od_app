@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                        <span>{{ message }}</span>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}    
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Faster R-CNN</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="/static/assets/img/favicon.ico" />
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v5.13.0/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="../static/css/styles.css" rel="stylesheet" />
+        <!-- Bootstrap CSS -->
+
+    </head>
+    <body id="page-top">
+        <!-- Masthead-->
+        <header class="masthead bg-primary text-white text-center">
+            <div class="container d-flex align-items-center flex-column">
+                    <!-- Masthead Avatar Image-->
+                <div class="divider-custom divider-light">
+                    <img class="masthead-avatar mb-5" src="../static/assets/traffic-jam.png" alt="" />
+                    <img class="masthead-avatar mb-5" style="padding:10px" src="../static/assets/traffic.png" alt="" />
+                    <img class="masthead-avatar mb-5" style="padding:10px" src="../static/assets/bike.png" alt="" />
+                </div>
+
+                <!-- Masthead Heading-->
+                <h1 class="masthead-heading text-uppercase mb-0">2D Traffic Object Detection Demo</h1>
+                <h3 class="masthead-subheading text-uppercase mb-0">Faster R-CNN ResNet152 V1 640x640</h3>
+                <!-- Icon Divider-->
+                <div class="divider-custom divider-light">
+                    <div class="divider-custom-line"></div>
+                    <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+                    <div class="divider-custom-line"></div>
+                </div>
+                <!-- Masthead Subheading-->
+                {% block body %}
+      
+                {% if error %}
+                <p class=error><strong>Error:</strong> {{ error }}
+                {% endif %}
+                
+                <form method="POST" enctype="multipart/form-data">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" name="photo" id="photo">
+                            <label class="custom-file-label" for="photo" id="photoLabel">Choose image</label>
+                        </div>
+                        <div class="form-group">
+                            <input name="text" class="form-control" id="imageLink" placeholder="OR png, jpg, jpeg image url">
+                        </div>
+                        <div>
+                            <input class="btn btn-light btn-block" type="submit" value="Upload" name="submit" onclick="$('#loading').show();">
+                        </div>
+
+                </form>
+                                  
+                {% endblock %}      
+            </div>
+
+        </header>
+        <!-- Scroll to Top Button (Only visible on small and extra-small screen sizes)-->
+        <div class="scroll-to-top d-lg-none position-fixed">
+            <a class="js-scroll-trigger d-block text-center text-white rounded" href="#page-top"><i class="fa fa-chevron-up"></i></a>
+        </div>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
+        <!-- Third party plugin JS-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+        <!-- Contact form JS-->
+        <script src="../static/assets/mail/jqBootstrapValidation.js"></script>
+        <script src="../static/assets/mail/contact_me.js"></script>
+        <!-- Core theme JS-->
+        <script src="../js/scripts.js"></script>
+        
+        <!-- Portfolio Section-->
+        
+        <section class="page-section portfolio" style="background-color:white" id="portfolio">
+            <div class="container">
+                <h1 id="loading" style="display:none;align-items:center;" class="masthead-subheading text-uppercase mb-0">Loading...</h1>
+                {% if user_image %}
+                    <h3 class="masthead-subheading text-uppercase mb-0">Detection Results</h3>
+                    <img style="border-radius:2%" class="img-fluid" src="{{ user_image }}" alt="">
+                {% endif %}
+                <div class="divider-custom divider-light">
+                    <!-- Portfolio Grid Items-->                    
+                    <div class="portfolio-item mx-auto" data-toggle="modal" data-target="#portfolioModal1">
+                        <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
+                            <div class="portfolio-item-caption-content text-center text-white"><i class="fas fa-plus fa-3x"></i></div>
+                        </div>
+                        <img class="img-fluid" src="../static/assets/examples/rsz_od1.jpg" alt="" />
+                    </div>
+
+                    <div style="width:1.6rem"></div>
+
+                    <div class="portfolio-item mx-auto" data-toggle="modal" data-target="#portfolioModal1">
+                        <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
+                            <div class="portfolio-item-caption-content text-center text-white"><i class="fas fa-plus fa-3x"></i></div>
+                        </div>
+                        <img class="img-fluid" src="../static/assets/examples/rsz_od2.png" alt="" />
+                    </div>
+
+                    <div style="width:1.6rem"></div>
+                    <div class="portfolio-item mx-auto" data-toggle="modal" data-target="#portfolioModal1">
+                        <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
+                            <div class="portfolio-item-caption-content text-center text-white"><i class="fas fa-plus fa-3x"></i></div>
+                        </div>
+                        <img class="img-fluid" src="../static/assets/examples/rsz_od3.png" alt="" />
+                    </div>
+                </div>
+                
+                <div>
+                    <p>
+                        This app serves the purpose of demonstrating Object Detection in 2D images. 
+                        The OD model used for this demo is Faster R-CNN ResNet152 V1 640x640 which can be found
+                        at <a href="https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/tf2_detection_zoo.md">TensorFlow 2 Detection Model Zoo.</a>
+                        Additionally, the model was trained on Images and Detection 2020 Labels 
+                        (truck, car, pedestrian, rider... up to 16 labels in total) from the 
+                        <a href="https://bdd-data.berkeley.edu">Berkely DeepDrive Dataset.</a> 
+                        This data was collected for Autonomous Driving research by Berkely DeepDrive.
+                        
+                        </br>
+                        </br>
+                        Visit my GitHub page for more information on pipeline config and code.
+
+                        
+
+
+                    </p>
+                </div>
+
+            </div>
+        </section>
+    </body>
+    <!-- <footer class="copyright py-4 text-center text-white" id="footer">Copyright © Your Website 2020</footer> -->
+</html>

@@ -1,0 +1,64 @@
+item {
+  id: 1
+  name: "rider"
+}
+item {
+  id: 2
+  name: "bicycle"
+}
+item {
+  id: 3
+  name: "other_person"
+}
+item {
+  id: 4
+  name: "trailer"
+}
+item {
+  id: 5
+  name: "traffic_light_r"
+}
+item {
+  id: 6
+  name: "traffic_light_g"
+}
+item {
+  id: 7
+  name: "bus"
+}
+item {
+  id: 8
+  name: "motorcycle"
+}
+item {
+  id: 9
+  name: "traffic_sign"
+}
+item {
+  id: 10
+  name: "traffic_light"
+}
+item {
+  id: 11
+  name: "truck"
+}
+item {
+  id: 12
+  name: "other_vehicle"
+}
+item {
+  id: 13
+  name: "train"
+}
+item {
+  id: 14
+  name: "pedestrian"
+}
+item {
+  id: 15
+  name: "traffic_light_y"
+}
+item {
+  id: 16
+  name: "car"
+}
