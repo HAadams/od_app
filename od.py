@@ -38,7 +38,7 @@ app = Flask(__name__)
 app.secret_key = b'_5$GFS#y2L"**&^*&FR%&#^F4Q8z\n\xec]/'
 ALLOWED_EXTENSIONS = ['jpeg', 'png', 'jpg']
 tf.keras.backend.clear_session()
-# detect_fn = tf.saved_model.load('./faster_rcnn_trained_model/saved_model/')
+detect_fn = tf.saved_model.load('./faster_rcnn_trained_model/saved_model/')
 
 @app.route('/')
 def home():
