@@ -1,17 +1,16 @@
 from object_detection.utils import visualization_utils as viz_utils
-import matplotlib.pyplot as plt
-# import utils.label_map_util
-import tensorflow as tf
-import numpy as np
-import requests
-import tempfile
-import time
-import json
-import os
+from tensorflow import saved_model
+from tensorflow.keras.backend import clear_session
+from matplotlib.pyplot import rcParams
+from matplotlib.pyplot import figure
+from numpy import array
+from time import time
+from numpy import expand_dims
+from requests import get as get_request
+from tempfile import NamedTemporaryFile
 
-from flask import Flask, render_template, request, redirect, jsonify, flash
+from flask import Flask, render_template, request, redirect, flash
 from werkzeug.utils import secure_filename
-from hashlib import sha256
 from io import BytesIO
 from PIL import Image
 
@@ -39,8 +38,8 @@ category_index = {
 
 
 ALLOWED_EXTENSIONS = ['jpeg', 'png', 'jpg']
-tf.keras.backend.clear_session()
-detect_fn = tf.saved_model.load('./faster_rcnn_trained_model/saved_model/')
+clear_session()
+detect_fn = saved_model.load('./faster_rcnn_trained_model/saved_model/')
 
 @app.route('/')
 def home():
@@ -69,7 +68,7 @@ def upload():
             print(f"ERROR in upload(): The image URL extension is not supported.")
             return redirect('/')
     
-        response = requests.get(link)
+        response = get_request(link)
         image = Image.open(BytesIO(response.content))
         image_found = True
 
@@ -84,14 +83,14 @@ def get_image_extension(image):
 
 def detect_boxes(image):
     (im_width, im_height) = image.size
-    image_np = np.array(image.getdata()).reshape((im_height, im_width, 3)).astype(np.uint8)
+    image_np = array(image.getdata()).reshape((im_height, im_width, 3)).astype(np.uint8)
 
-    input_tensor = np.expand_dims(image_np, 0)
-    start_time = time.time()
+    input_tensor = expand_dims(image_np, 0)
+    start_time = time()
     detections = detect_fn(input_tensor)
-    end_time = time.time()
+    end_time = time()
     print("Prediction Time: ", end_time - start_time)
-    plt.rcParams['figure.figsize'] = [42, 21]
+    rcParams['figure.figsize'] = [42, 21]
     image_np_with_detections = image_np.copy()
     viz_utils.visualize_boxes_and_labels_on_image_array(
         image_np_with_detections,
@@ -104,9 +103,9 @@ def detect_boxes(image):
         min_score_thresh=.40,
         agnostic_mode=False)
 
-    plt.figure(figsize=(24,30))
+    figure(figsize=(24,30))
     img = Image.fromarray(image_np_with_detections , 'RGB')
-    image_name = f"{tempfile.NamedTemporaryFile().name}.jpg".split('/')[-1]
+    image_name = f"{NamedTemporaryFile().name}.jpg".split('/')[-1]
     image_path = f'./static/uploads/{image_name}'
     print("IMAGE_NAME: ", image_name)
     print("IMAGE_PATH: ", image_path)
