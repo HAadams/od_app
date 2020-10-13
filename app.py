@@ -1,6 +1,6 @@
-import utils.visualization_utils as viz_utils
+from object_detection.utils import visualization_utils as viz_utils
 import matplotlib.pyplot as plt
-import utils.label_map_util
+# import utils.label_map_util
 import tensorflow as tf
 import numpy as np
 import requests
@@ -18,7 +18,8 @@ from PIL import Image
 app = Flask(__name__)
 app.secret_key = b'_5$GFS#y2L"**&^*&FR%&#^F4Q8z\n\xec]/'
 
-category_index = {  1: {'id': 1, 'name': 'rider'},
+category_index = {
+                    1: {'id': 1, 'name': 'rider'},
                     2: {'id': 2, 'name': 'bicycle'},
                     3: {'id': 3, 'name': 'other_person'},
                     4: {'id': 4, 'name': 'trailer'},
@@ -71,7 +72,7 @@ def upload():
         response = requests.get(link)
         image = Image.open(BytesIO(response.content))
         image_found = True
-    
+
     user_image = None
     if image_found:
         user_image = detect_boxes(image)
@@ -112,7 +113,5 @@ def detect_boxes(image):
     img.save(image_path)
     return image_path
 
-
 if __name__ == '__main__':
     app.run()
-
