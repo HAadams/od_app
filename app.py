@@ -1,6 +1,4 @@
-from numpy import array
 from time import time
-from numpy import expand_dims
 from requests import get as get_request
 from tempfile import NamedTemporaryFile
 
@@ -8,6 +6,13 @@ from flask import Flask, render_template, request, redirect, flash
 from werkzeug.utils import secure_filename
 from io import BytesIO
 from PIL import Image
+import numpy as np
+
+from object_detection.utils import visualization_utils as viz_utils
+from tensorflow import saved_model
+from tensorflow.keras.backend import clear_session
+from matplotlib.pyplot import rcParams
+from matplotlib.pyplot import figure
 
 app = Flask(__name__)
 app.secret_key = b'_5$GFS#y2L"**&^*&FR%&#^F4Q8z\n\xec]/'
@@ -75,18 +80,13 @@ def get_image_extension(image):
     return secure_filename(image.filename).rsplit('.')[-1]
 
 def detect_boxes(image):
-    from object_detection.utils import visualization_utils as viz_utils
-    from tensorflow import saved_model
-    from tensorflow.keras.backend import clear_session
-    from matplotlib.pyplot import rcParams
-    from matplotlib.pyplot import figure
     clear_session()
     detect_fn = saved_model.load('./faster_rcnn_trained_model/saved_model/')
 
     (im_width, im_height) = image.size
-    image_np = array(image.getdata()).reshape((im_height, im_width, 3)).astype(np.uint8)
+    image_np = np.array(image.getdata()).reshape((im_height, im_width, 3)).astype(np.uint8)
 
-    input_tensor = expand_dims(image_np, 0)
+    input_tensor = np.expand_dims(image_np, 0)
     start_time = time()
     detections = detect_fn(input_tensor)
     end_time = time()
