@@ -17,6 +17,9 @@ from matplotlib.pyplot import figure
 app = Flask(__name__)
 app.secret_key = b'_5$GFS#y2L"**&^*&FR%&#^F4Q8z\n\xec]/'
 
+clear_session()
+detect_fn = saved_model.load('./faster_rcnn_trained_model/saved_model/')
+
 category_index = {
                     1: {'id': 1, 'name': 'rider'},
                     2: {'id': 2, 'name': 'bicycle'},
@@ -80,9 +83,6 @@ def get_image_extension(image):
     return secure_filename(image.filename).rsplit('.')[-1]
 
 def detect_boxes(image):
-    clear_session()
-    detect_fn = saved_model.load('./faster_rcnn_trained_model/saved_model/')
-
     (im_width, im_height) = image.size
     image_np = np.array(image.getdata()).reshape((im_height, im_width, 3)).astype(np.uint8)
 
@@ -114,4 +114,4 @@ def detect_boxes(image):
     return image_path
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0', port=8080)
