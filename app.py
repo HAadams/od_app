@@ -74,45 +74,44 @@ def upload():
 def get_image_extension(image):
     return secure_filename(image.filename).rsplit('.')[-1]
 
-# def detect_boxes(image):
-#     from object_detection.utils import visualization_utils as viz_utils
+def detect_boxes(image):
+    from object_detection.utils import visualization_utils as viz_utils
+    from tensorflow import saved_model
+    from tensorflow.keras.backend import clear_session
+    from matplotlib.pyplot import rcParams
+    from matplotlib.pyplot import figure
+    clear_session()
+    detect_fn = saved_model.load('./faster_rcnn_trained_model/saved_model/')
 
-#     from tensorflow import saved_model
-#     from tensorflow.keras.backend import clear_session
-#     from matplotlib.pyplot import rcParams
-#     from matplotlib.pyplot import figure
-#     clear_session()
-#     detect_fn = saved_model.load('./faster_rcnn_trained_model/saved_model/')
+    (im_width, im_height) = image.size
+    image_np = array(image.getdata()).reshape((im_height, im_width, 3)).astype(np.uint8)
 
-#     (im_width, im_height) = image.size
-#     image_np = array(image.getdata()).reshape((im_height, im_width, 3)).astype(np.uint8)
+    input_tensor = expand_dims(image_np, 0)
+    start_time = time()
+    detections = detect_fn(input_tensor)
+    end_time = time()
+    print("Prediction Time: ", end_time - start_time)
+    rcParams['figure.figsize'] = [42, 21]
+    image_np_with_detections = image_np.copy()
+    viz_utils.visualize_boxes_and_labels_on_image_array(
+        image_np_with_detections,
+        detections['detection_boxes'][0].numpy(),
+        detections['detection_classes'][0].numpy().astype(np.int32),
+        detections['detection_scores'][0].numpy(),
+        category_index,
+        use_normalized_coordinates=True,
+        max_boxes_to_draw=200,
+        min_score_thresh=.40,
+        agnostic_mode=False)
 
-#     input_tensor = expand_dims(image_np, 0)
-#     start_time = time()
-#     detections = detect_fn(input_tensor)
-#     end_time = time()
-#     print("Prediction Time: ", end_time - start_time)
-#     rcParams['figure.figsize'] = [42, 21]
-#     image_np_with_detections = image_np.copy()
-#     viz_utils.visualize_boxes_and_labels_on_image_array(
-#         image_np_with_detections,
-#         detections['detection_boxes'][0].numpy(),
-#         detections['detection_classes'][0].numpy().astype(np.int32),
-#         detections['detection_scores'][0].numpy(),
-#         category_index,
-#         use_normalized_coordinates=True,
-#         max_boxes_to_draw=200,
-#         min_score_thresh=.40,
-#         agnostic_mode=False)
-
-#     figure(figsize=(24,30))
-#     img = Image.fromarray(image_np_with_detections , 'RGB')
-#     image_name = f"{NamedTemporaryFile().name}.jpg".split('/')[-1]
-#     image_path = f'./static/uploads/{image_name}'
-#     print("IMAGE_NAME: ", image_name)
-#     print("IMAGE_PATH: ", image_path)
-#     img.save(image_path)
-#     return image_path
+    figure(figsize=(24,30))
+    img = Image.fromarray(image_np_with_detections , 'RGB')
+    image_name = f"{NamedTemporaryFile().name}.jpg".split('/')[-1]
+    image_path = f'./static/uploads/{image_name}'
+    print("IMAGE_NAME: ", image_name)
+    print("IMAGE_PATH: ", image_path)
+    img.save(image_path)
+    return image_path
 
 if __name__ == '__main__':
     app.run()
