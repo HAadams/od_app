@@ -104,7 +104,7 @@ def detect_boxes(image):
         min_score_thresh=.40,
         agnostic_mode=False)
 
-    figure(figsize=(24,30))
+    figure(figsize=(16,20))
     img = Image.fromarray(image_np_with_detections , 'RGB')
     image_name = f"{NamedTemporaryFile().name}.jpg".split('/')[-1]
     image_path = f'./static/uploads/{image_name}'
