@@ -65,10 +65,10 @@ def upload():
 
     elif request.method == 'POST' and request.form['text']:
         link = request.form['text']
-        extension = link.split('.')[-1]
+        extension = link.split('.')[-1].lower()
 
         if extension not in ALLOWED_EXTENSIONS:
-            flash(f"Image URL must be of .png, .jpg or .jpeg extension.", "error")
+            flash(f"Image URL must end with .png, .jpg or .jpeg", "error")
             print(f"ERROR in upload(): The image URL extension is not supported.")
             return redirect('/')
     
