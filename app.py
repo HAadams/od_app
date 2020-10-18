@@ -6,6 +6,7 @@ from flask import Flask, render_template, request, redirect, flash
 from werkzeug.utils import secure_filename
 from io import BytesIO
 from PIL import Image
+from wtforms import Form
 import numpy as np
 
 from object_detection.utils import visualization_utils as viz_utils
@@ -16,6 +17,7 @@ from matplotlib.pyplot import figure
 
 app = Flask(__name__)
 app.secret_key = b'_5$GFS#y2L"**&^*&FR%&#^F4Q8z\n\xec]/'
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
 clear_session()
 detect_fn = saved_model.load('./faster_rcnn_trained_model/saved_model/')
@@ -50,21 +52,22 @@ def home():
 def upload():
     image_found = False
     if request.method == 'POST' and request.files['photo']:
-        image = Image.open(request.files['photo'])
         extension = get_image_extension(request.files['photo'])
         print("IMAGE_STUFF: ",request.files['photo'])
 
         if extension not in ALLOWED_EXTENSIONS:
             flash(f"This image extension (.{extension}) is not supported. Upload {' '.join(ALLOWED_EXTENSIONS)} only.", "error")
             print(f"ERROR in upload(): The image extension is not supported.")
-            return redirect('/')
+            return render_template('index.html', user_image=False)
+
+        image = Image.open(request.files['photo'])
         image_found = True
 
     elif request.method == 'POST' and request.form['text']:
         link = request.form['text']
         extension = link.split('.')[-1]
 
-        if(extension not in ALLOWED_EXTENSIONS):
+        if extension not in ALLOWED_EXTENSIONS:
             flash(f"Image URL must be of .png, .jpg or .jpeg extension.", "error")
             print(f"ERROR in upload(): The image URL extension is not supported.")
             return redirect('/')
